@@ -1,18 +1,10 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  TemplateRef
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit } from '@angular/core';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView
-} from 'angular-calendar';
+import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
+import { DemoService } from './demo.service';
+import { Title } from '@angular/platform-browser';
 
 const colors: any = {
   red: {
@@ -35,8 +27,15 @@ const colors: any = {
   templateUrl: './demo.component.html',
   styleUrls: ['./demo.component.css']
 })
-export class DemoComponent {
+export class DemoComponent implements OnInit {
+
+  constructor(private modal: NgbModal,
+              private demoService: DemoService) { }
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+
+  date: '2019-11-16T00:00:00';
+
+  taskData: [];
 
   view: CalendarView = CalendarView.Month;
 
@@ -67,50 +66,19 @@ export class DemoComponent {
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
+  events: CalendarEvent[] = [];
 
   activeDayIsOpen = true;
-
-  constructor(private modal: NgbModal) { }
+  ngOnInit() {
+    this.demoService.getTask().subscribe(data => {
+      data.forEach(element => {
+        element.start = new Date(data[0].start);
+        element.end = new Date(data[0].end);
+        this.events.push(element);
+      });
+      console.log('game: ', this.events);
+    });
+  }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -126,17 +94,11 @@ export class DemoComponent {
     }
   }
 
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd
-  }: CalendarEventTimesChangedEvent): void {
+  eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
     this.events = this.events.map(iEvent => {
       if (iEvent === event) {
         return {
-          ...event,
-          start: newStart,
-          end: newEnd
+          ...event, start: newStart, end: newEnd
         };
       }
       return iEvent;
@@ -153,7 +115,7 @@ export class DemoComponent {
     this.events = [
       ...this.events,
       {
-        title: 'New event',
+        title: 'abcxyz',
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
         color: colors.red,
@@ -165,13 +127,17 @@ export class DemoComponent {
       }
     ];
   }
-
   deleteEvent(eventToDelete: CalendarEvent) {
+    this.demoService.deleteTask(this.events.find(event => event !== eventToDelete).id).subscribe(data => {});
     this.events = this.events.filter(event => event !== eventToDelete);
   }
 
   setView(view: CalendarView) {
     this.view = view;
+  }
+
+  UpdateEvent(eventToUpdate: CalendarEvent) {
+    console.log(this.events.find(event => event !== eventToUpdate).id);
   }
 
   closeOpenMonthViewDay() {
