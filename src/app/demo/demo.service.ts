@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { CalendarEvent } from 'calendar-utils';
 
 @Injectable({
@@ -10,13 +10,18 @@ export class DemoService {
   constructor(private http: HttpClient) { }
   url: 'http://localhost:3000/data';
 
-  events: CalendarEvent[];
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
+  task: any;
+  // events: CalendarEvent[];
   getTask(): Observable<any> {
     return this.http.get('http://localhost:3000/data');
   }
 
-  postTask(events: any): Observable<any> {
-    return this.http.post(this.url, this.events);
+  postTask(event): Observable<any> {
+    return this.http.post(this.url, event, this.httpOptions);
   }
 
   deleteTask(id: any): Observable<any> {
@@ -28,6 +33,6 @@ export class DemoService {
   }
 
   updateTask(id: any): Observable<any> {
-    return this.http.put('http://localhost:3000/data/' + id, this.events);
+    return this.http.put('http://localhost:3000/data/' + id, this.task);
   }
 }

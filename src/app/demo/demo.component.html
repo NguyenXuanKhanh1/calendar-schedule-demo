@@ -45,8 +45,6 @@
   </mwl-calendar-day-view>
 </div>
 
-<!-- Everything you see below is just for the demo, you don't need to include it in your app -->
-
 <br /><br /><br />
 
 <h3>
@@ -70,9 +68,6 @@
 
     <tbody>
       <tr *ngFor="let event of events">
-        <td>
-          <input type="text" class="form-control" id="taskID" [(ngModel)]="event.id"/>
-        </td>
         <td>
           <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
         </td>

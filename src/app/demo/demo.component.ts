@@ -1,10 +1,9 @@
 import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit } from '@angular/core';
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
+import { startOfDay, endOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { DemoService } from './demo.service';
-import { Title } from '@angular/platform-browser';
 
 const colors: any = {
   red: {
@@ -72,8 +71,8 @@ export class DemoComponent implements OnInit {
   ngOnInit() {
     this.demoService.getTask().subscribe(data => {
       data.forEach(element => {
-        element.start = new Date(data[0].start);
-        element.end = new Date(data[0].end);
+        element.start = new Date(element.start);
+        element.end = new Date(element.end);
         this.events.push(element);
         console.log(element.id);
       });
@@ -118,15 +117,11 @@ export class DemoComponent implements OnInit {
       {
         title: 'abcxyz',
         start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true
-        }
+        end: endOfDay(new Date())
       }
     ];
+
+    // this.demoService.postTask(task).subscribe(data => {});
   }
   deleteEvent(eventToDelete: CalendarEvent) {
     this.demoService.deleteTask(this.events.find(event => event === eventToDelete).id).subscribe(data => {});
@@ -142,8 +137,6 @@ export class DemoComponent implements OnInit {
     this.demoService.getDetailTask(id).subscribe(data => {
       console.log(data.title);
     });
-
-    // console.log(this.events.filter(event => event !== eventToUpdate));
   }
 
   closeOpenMonthViewDay() {
