@@ -23,6 +23,10 @@ export class DemoService {
     return this.http.delete('http://localhost:3000/data/' + id);
   }
 
+  getDetailTask(id: any): Observable<any> {
+    return this.http.get('http://localhost:3000/data/' + id);
+  }
+
   updateTask(id: any): Observable<any> {
     return this.http.put('http://localhost:3000/data/' + id, this.events);
   }

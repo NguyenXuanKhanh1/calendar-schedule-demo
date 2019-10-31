@@ -75,6 +75,7 @@ export class DemoComponent implements OnInit {
         element.start = new Date(data[0].start);
         element.end = new Date(data[0].end);
         this.events.push(element);
+        console.log(element.id);
       });
       console.log('game: ', this.events);
     });
@@ -128,7 +129,7 @@ export class DemoComponent implements OnInit {
     ];
   }
   deleteEvent(eventToDelete: CalendarEvent) {
-    this.demoService.deleteTask(this.events.find(event => event !== eventToDelete).id).subscribe(data => {});
+    this.demoService.deleteTask(this.events.find(event => event === eventToDelete).id).subscribe(data => {});
     this.events = this.events.filter(event => event !== eventToDelete);
   }
 
@@ -137,7 +138,12 @@ export class DemoComponent implements OnInit {
   }
 
   UpdateEvent(eventToUpdate: CalendarEvent) {
-    console.log(this.events.find(event => event !== eventToUpdate).id);
+    const id = this.events.find(event => event === eventToUpdate).id;
+    this.demoService.getDetailTask(id).subscribe(data => {
+      console.log(data.title);
+    });
+
+    // console.log(this.events.filter(event => event !== eventToUpdate));
   }
 
   closeOpenMonthViewDay() {

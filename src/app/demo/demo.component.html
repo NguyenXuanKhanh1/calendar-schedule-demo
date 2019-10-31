@@ -71,6 +71,9 @@
     <tbody>
       <tr *ngFor="let event of events">
         <td>
+          <input type="text" class="form-control" id="taskID" [(ngModel)]="event.id"/>
+        </td>
+        <td>
           <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
         </td>
         <td>

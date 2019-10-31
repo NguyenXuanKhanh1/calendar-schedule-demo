@@ -17,6 +17,8 @@ import { RouterModule } from '@angular/router';
 import { CustomScheduleComponent } from './custom-schedule/custom-schedule.component';
 // tslint:disable-next-line: max-line-length
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService } from '@syncfusion/ej2-angular-schedule';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { DemoService } from './demo/demo.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,9 +38,12 @@ import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWe
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-    ScheduleModule, RecurrenceEditorModule
+    ScheduleModule,
+    RecurrenceEditorModule,
+    // HttpClient,
+    HttpClientModule
   ],
-  providers: [DayService, MonthService, WorkWeekService, WeekService, MonthAgendaService, ],
+  providers: [DayService, MonthService, WorkWeekService, WeekService, MonthAgendaService, DemoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

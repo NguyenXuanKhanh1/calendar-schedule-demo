@@ -7,7 +7,8 @@ import { CustomScheduleComponent } from './custom-schedule/custom-schedule.compo
 const routes: Routes = [
   {path: 'demo', component: DemoComponent},
   {path: 'custom', component: CustomScheduleComponent},
-  {path: '', redirectTo: 'demo', pathMatch: 'full'}
+  {path: '', redirectTo: 'demo', pathMatch: 'full'},
+  {path: '**', redirectTo: 'demo', pathMatch: 'full'}
 ];
 
 @NgModule({
